@@ -1,7 +1,4 @@
-//==================================================
-// TP EEPROM - Grupo 8
-// Valentin Alfuzzi - Tobias Chama
-//==================================================
+//Grupo 8 - Valentin Alfuzzi - Tobias Chama
 
 #include <Wire.h>
 #include <U8g2lib.h>
@@ -20,8 +17,6 @@ U8G2_SH1106_128X64_NONAME_F_HW_I2C pantalla(U8G2_R0, U8X8_PIN_NONE);
 
 Preferences preferencias;
 
-//================ MAQUINA DE ESTADOS ================
-
 enum Estado
 {
   PANTALLA1,
@@ -29,8 +24,6 @@ enum Estado
 };
 
 Estado estado = PANTALLA1;
-
-//====================================================
 
 int temperatura = 0;
 int umbral = 25;
@@ -48,13 +41,12 @@ unsigned long tiempoLectura = 0;
 
 bool guardado = false;
 
-//====================================================
+
 
 void leerTemperatura();
 void mostrarPantalla1();
 void mostrarPantalla2();
 
-//====================================================
 
 void setup()
 {
@@ -91,13 +83,11 @@ void loop()
 
   switch (estado)
   {
-    //==================== PANTALLA 1 ====================
 
     case PANTALLA1:
 
       mostrarPantalla1();
 
-      // Mantener SW1 5 segundos para entrar a configuración
 
       if (sw1Actual && !sw1Anterior)
       {
@@ -120,22 +110,16 @@ void loop()
 
     break;
 
-    //==================== PANTALLA 2 ====================
 
     case PANTALLA2:
 
       mostrarPantalla2();
-
-      //---------------- SW1 ----------------
-
-      // Guarda el instante en que se presiona
 
       if (sw1Actual && !sw1Anterior)
       {
         tiempoSW1 = millis();
       }
 
-      // Al soltar, si fue una pulsación corta, aumenta
 
       if (!sw1Actual && sw1Anterior)
       {
@@ -148,17 +132,12 @@ void loop()
         }
       }
 
-      //---------------- SW2 ----------------
-
-      // Guarda el instante en que se presiona
 
       if (sw2Actual && !sw2Anterior)
       {
         tiempoSW2 = millis();
         guardado = false;
       }
-
-      // Si permanece presionado 5 s, guarda y vuelve
 
       if (sw2Actual && !guardado)
       {
@@ -171,9 +150,6 @@ void loop()
           estado = PANTALLA1;
         }
       }
-
-      // Al soltar, si NO se guardó, resta
-
       if (!sw2Actual && sw2Anterior)
       {
         if (!guardado)
@@ -189,13 +165,9 @@ void loop()
 
     break;
   }
-
   sw1Anterior = sw1Actual;
   sw2Anterior = sw2Actual;
-}//--------------------------------------------------
-// Lee la temperatura del DHT11
-//--------------------------------------------------
-
+}
 void leerTemperatura()
 {
   float t = dht.readTemperature();
@@ -205,11 +177,6 @@ void leerTemperatura()
     temperatura = (int)t;
   }
 }
-
-//--------------------------------------------------
-// Pantalla principal
-//--------------------------------------------------
-
 void mostrarPantalla1()
 {
   pantalla.clearBuffer();
@@ -229,10 +196,6 @@ void mostrarPantalla1()
 
   pantalla.sendBuffer();
 }
-
-//--------------------------------------------------
-// Pantalla de configuracion
-//--------------------------------------------------
 
 void mostrarPantalla2()
 {
